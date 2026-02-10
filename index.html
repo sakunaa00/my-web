@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Valentine's 💖</title>
+
+<style>
+:root {
+    --primary: #ff3366;
+    --secondary: #b3003b;
+    --tertiary: #8a0030;
+    --heart-color: #ff1744;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    background: pink;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    margin: 5vh 0 2vh;
+    color: var(--secondary);
+    font-size: clamp(1.5rem, 5vw, 3rem);
+}
+
+.game-box {
+    position: relative;
+    height: 50vh;
+    width: clamp(200px, 90vw, 600px);
+    margin: 2vh auto 0;
+}
+
+button {
+    padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px);
+    font-size: clamp(14px, 3vw, 20px);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin: 1vh;
+    transition: 0.3s;
+    touch-action: manipulation;
+}
+
+#yesBtn {
+    background: var(--primary);
+    color: white;
+    margin-left: -7vw;
+}
+
+#noBtn {
+    background: white;
+    color: var(--primary);
+    position: absolute;
+}
+
+.message {
+    font-size: clamp(18px, 4vw, 32px);
+    color: var(--secondary);
+    margin-top: 3vh;
+    display: none;
+    line-height: 1.5;
+}
+
+.hover-text {
+    margin-top: 2vh;
+    font-size: clamp(14px, 3vw, 22px);
+    color: var(--tertiary);
+    height: 3vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* YES button glow animation */
+.glow {
+    animation: glowAnim 1s ease-in-out infinite alternate;
+}
+
+@keyframes glowAnim {
+    0% { transform: scale(1); box-shadow: 0 0 10px var(--primary); }
+    50% { transform: scale(1.2); box-shadow: 0 0 30px #ff6699; }
+    100% { transform: scale(1.1); box-shadow: 0 0 20px var(--primary); }
+}
+
+.heart {
+    position: fixed;
+    top: -50px;
+    font-size: 24px;
+    color: var(--heart-color);
+    pointer-events: none;
+    animation: fall linear forwards;
+    will-change: transform;
+}
+
+@keyframes fall {
+    to { transform: translateY(100vh); opacity: 0; }
+}
+
+.confetti {
+    position: fixed;
+    pointer-events: none;
+    font-size: 20px;
+    z-index: 1000;
+}
+
+@keyframes confettiFall {
+    to {
+        transform: translateY(100vh) rotateZ(360deg);
+        opacity: 0;
+    }
+}
+
+.spin {
+    animation: spinAnim 0.6s ease-in-out !important;
+}
+
+@keyframes spinAnim {
+    0%, 100% { transform: rotateZ(0deg); }
+    50% { transform: rotateZ(360deg); }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    .game-box {
+        height: 45vh;
+        width: 95vw;
+    }
+    
+    button {
+        margin: 0.5vh;
+    }
+    
+    #yesBtn {
+        margin-left: -5vw;
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 481px) and (max-width: 1024px) {
+    .game-box {
+        height: 48vh;
+        width: 92vw;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>Will you be my Valentine? 💖</h1>
+
+<div class="game-box">
+    <button id="yesBtn">YES 💕</button>
+    <button id="noBtn">NO 😜</button>
+    <div class="hover-text" id="hoverText"></div>
+
+    <div class="message" id="loveMessage">
+        Happy Valentine's Day my love 💘<br>
+        I love you so much ❤️
+    </div>
+</div>
+
+<script>
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const hoverText = document.getElementById("hoverText");
+const container = document.querySelector(".game-box");
+const messages = [
+    "Are you sure? 🥺", "Think again 😢", "Don't break my heart 💔",
+    "Pretty please? 💕", "You can't catch me 😜", "Last chance 😏",
+    "I promise I'll be good! 😇", "I need you! 😭", "I can't live without you! 😩"
+];
+const msgLen = messages.length;
+
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "❤";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 20 + 16 + "px";
+    heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 7000);
+}
+setInterval(createHeart, 400);
+
+function moveNOButton() {
+    const maxX = container.clientWidth - noBtn.offsetWidth;
+    const maxY = container.clientHeight - noBtn.offsetHeight;
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
+    hoverText.textContent = messages[Math.floor(Math.random() * msgLen)];
+    
+    // Add spin animation
+    noBtn.classList.remove("spin");
+    void noBtn.offsetWidth; // Trigger reflow
+    noBtn.classList.add("spin");
+    
+    // Haptic feedback
+    if (navigator.vibrate) {
+        navigator.vibrate(50);
+    }
+}
+
+noBtn.addEventListener("mouseover", moveNOButton);
+noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    moveNOButton();
+});
+
+// YES button click
+yesBtn.addEventListener("click", () => {
+    document.getElementById("loveMessage").style.display = "block";
+    hoverText.textContent = "";
+    noBtn.style.display = "none";
+    yesBtn.classList.add("glow");
+    
+    // Confetti burst
+    createConfetti();
+    
+    // Haptic feedback - stronger for YES
+    if (navigator.vibrate) {
+        navigator.vibrate([100, 50, 100]);
+    }
+});
+
+function createConfetti() {
+    const confettiPieces = ["🎉", "💕", "❤️", "💖", "✨", "🎊"];
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement("div");
+        confetti.className = "confetti";
+        confetti.textContent = confettiPieces[Math.floor(Math.random() * confettiPieces.length)];
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.top = "50%";
+        confetti.style.animationDuration = Math.random() * 2 + 2 + "s";
+        confetti.style.animation = `confettiFall ${confetti.style.animationDuration} ease-in forwards`;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), parseFloat(confetti.style.animationDuration) * 1000);
+    }
+}
+</script>
+
+</body>
+</html>
