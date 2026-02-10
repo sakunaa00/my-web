@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Valentine's 💖</title>
+<title>My Bungisngis 💖</title>
 
 <style>
 :root {
@@ -129,19 +129,6 @@ button {
     to { transform: translateY(100vh); opacity: 0; }
 }
 
-.confetti {
-    position: fixed;
-    pointer-events: none;
-    font-size: 20px;
-    z-index: 1000;
-}
-
-@keyframes confettiFall {
-    to {
-        transform: translateY(100vh) rotateZ(360deg);
-        opacity: 0;
-    }
-}
 
 .spin {
     animation: spinAnim 0.6s ease-in-out !important;
@@ -283,23 +270,51 @@ function createHeart() {
     heart.style.fontSize = Math.random() * 20 + 16 + "px";
     heart.style.animationDuration = Math.random() * 3 + 4 + "s";
     document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 7000);
+    // remove when animation ends to avoid timing mismatches
+    const removeOnEnd = () => { heart.removeEventListener('animationend', removeOnEnd); if (heart.parentNode) heart.parentNode.removeChild(heart); };
+    heart.addEventListener('animationend', removeOnEnd);
 }
-setInterval(createHeart, 400);
-// adjust heart creation frequency based on screen size and reduced-motion
-let heartIntervalId = null;
+// Heart spawner using requestAnimationFrame for smoother timing and fewer timers
+let lastSpawn = 0;
+let spawnInterval = 400; // ms, adjusted in startHearts
+let heartsRunning = false;
 function startHearts() {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (heartIntervalId) clearInterval(heartIntervalId);
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { heartsRunning = false; return; }
     const small = window.innerWidth < 420 || window.innerHeight < 500;
-    const interval = small ? 900 : 400;
-    heartIntervalId = setInterval(createHeart, interval);
+    spawnInterval = small ? 900 : 400;
+    if (!heartsRunning) {
+        heartsRunning = true;
+        requestAnimationFrame(heartLoop);
+    }
 }
+
+function stopHearts() {
+    heartsRunning = false;
+}
+
+function heartLoop(ts) {
+    if (!heartsRunning) return;
+    if (!lastSpawn) lastSpawn = ts;
+    if (ts - lastSpawn >= spawnInterval) {
+        createHeart();
+        lastSpawn = ts;
+    }
+    requestAnimationFrame(heartLoop);
+}
+
 startHearts();
-window.addEventListener('resize', () => {
-    startHearts();
-    positionNoButton();
-});
+
+// Debounced resize to avoid thrashing layout handlers
+function debounce(fn, wait = 120) {
+    let t = null;
+    return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+    };
+}
+
+const onResize = debounce(() => { startHearts(); positionNoButton(); }, 150);
+window.addEventListener('resize', onResize);
 
 function moveNOButton() {
     const maxX = container.clientWidth - noBtn.offsetWidth;
@@ -455,7 +470,8 @@ function playCheer() {
 }
 
 // Canvas confetti (lightweight)
-function canvasConfetti() {
+function canvasConfetti(count = 80, duration = 1800) {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const canvas = document.createElement('canvas');
     canvas.style.position = 'fixed';
     canvas.style.left = 0; canvas.style.top = 0; canvas.style.pointerEvents = 'none';
@@ -464,30 +480,30 @@ function canvasConfetti() {
     const ctx = canvas.getContext('2d');
     const particles = [];
     const colors = ['#ff3366','#ff6699','#ffd1e6','#ffccf0','#ffb3c7'];
-    for (let i=0;i<80;i++) {
+    for (let i=0;i<count;i++) {
         particles.push({
             x: Math.random()*canvas.width,
-            y: Math.random()*canvas.height*0.2,
-            vx: (Math.random()-0.5)*6,
-            vy: Math.random()*4+2,
-            r: Math.random()*6+3,
+            y: Math.random()*canvas.height*0.25,
+            vx: (Math.random()-0.5)*8,
+            vy: Math.random()*5+2,
+            r: Math.random()*7+3,
             color: colors[Math.floor(Math.random()*colors.length)],
             rot: Math.random()*Math.PI*2,
-            vr: (Math.random()-0.5)*0.2
+            vr: (Math.random()-0.5)*0.3
         });
     }
-    let elapsed = 0;
-    function frame(dt) {
+    const start = performance.now();
+    function frame(now) {
+        const t = now - start;
         ctx.clearRect(0,0,canvas.width,canvas.height);
         for (let p of particles) {
-            p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vy += 0.05;
+            p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vy += 0.06;
             ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
             ctx.fillStyle = p.color; ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*1.6);
             ctx.restore();
         }
-        elapsed += 16;
-        if (elapsed < 1800) requestAnimationFrame(frame);
-        else { document.body.removeChild(canvas); }
+        if (t < duration) requestAnimationFrame(frame);
+        else { if (canvas.parentNode) canvas.parentNode.removeChild(canvas); }
     }
     requestAnimationFrame(frame);
 }
@@ -499,8 +515,8 @@ yesBtn.addEventListener("click", () => {
     noBtn.style.display = "none";
     yesBtn.classList.add("glow");
     
-    // Confetti burst
-    createConfetti();
+    // Confetti burst (canvas)
+    canvasConfetti(60, 2000);
     
     // Haptic feedback - stronger for YES
     if (navigator.vibrate) {
@@ -508,23 +524,9 @@ yesBtn.addEventListener("click", () => {
     }
 });
 
-function createConfetti() {
-    const confettiPieces = ["🎉", "💕", "❤️", "💖", "✨", "🎊"];
-    for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement("div");
-        confetti.className = "confetti";
-        confetti.textContent = confettiPieces[Math.floor(Math.random() * confettiPieces.length)];
-        confetti.style.left = Math.random() * 100 + "vw";
-        confetti.style.top = "50%";
-        confetti.style.animationDuration = Math.random() * 2 + 2 + "s";
-        confetti.style.animation = `confettiFall ${confetti.style.animationDuration} ease-in forwards`;
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), parseFloat(confetti.style.animationDuration) * 1000);
-    }
-}
-
 
 </script>
+
 
 </body>
 </html>
