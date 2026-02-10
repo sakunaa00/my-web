@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+    <style>
+        /* Keep current pink + falling-heart design */
+        html, body { height: 100%; margin: 0; }
+        body { position: relative; overflow: hidden; background: pink; font-family: system-ui, Arial, sans-serif; color: #3a0320; }
+
+        /* top card container for forms */
+        .container { max-width: 980px; margin: 4vh auto; padding: 20px; background: rgba(255,255,255,0.92); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); z-index: 6; position: relative; }
+        .container h1 { margin: 0 0 6px; font-size: 26px; color: #8a0b2a; text-align: center; }
+        .container p { margin: 0 0 14px; text-align: center; color: #5a1227; }
+
+        /* Auth forms layout */
+        .auth { display: flex; gap: 20px; justify-content: center; align-items: flex-start; }
+        .form { background: white; padding: 14px; border-radius: 10px; width: 320px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+        .form h2 { margin: 0 0 10px; font-size: 18px; color: #7a0b2a; }
+        .form label { display:block; font-size: 13px; color:#5a1a2b; margin-bottom:6px; }
+        .form input { width: 100%; padding: 9px 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08); box-sizing: border-box; }
+        .form small { display:block; color:#6a2a3a; margin-bottom:8px; }
+        .form .btn { width: 100%; padding:10px; border-radius:8px; border: none; background: #c71b45; color: white; font-weight:600; cursor:pointer; }
+
+        /* Falling hearts (preserve) */
+        .heart { position: fixed; top: 0; font-size: 32px; color: #ff1744; pointer-events: none; z-index: 999; }
+        .heart.fall1 { animation: fall 5s linear forwards; }
+        .heart.fall2 { animation: fall 6s linear forwards; }
+        .heart.fall3 { animation: fall 7s linear forwards; }
+        @keyframes fall { 
+            0% { top: -50px; opacity: 1; }
+            100% { top: 100vh; opacity: 0; }
+        }
+
+        /* overlay message */
+        .message-overlay { position: fixed; left: 50%; top: 18%; transform: translateX(-50%); z-index: 60; background: rgba(255,255,255,0.97); padding: 16px 20px; border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12); max-width: 90%; text-align: center; color: #7a0b2a; }
+
+        /* Mobile optimizations */
+        @media (max-width: 820px) {
+            .auth { flex-direction: column; align-items: center; }
+            .form { width: 100%; max-width: 420px; }
+            .container { margin: 3vh 12px; padding: 16px; }
+            .container h1 { font-size: 20px; }
+        }
+
+        @media (max-width: 420px) {
+            .form h2 { font-size: 16px; }
+            .form input { padding: 10px; }
+            .message-overlay { top: 12%; font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Your Account</h1>
+        <p>Register to join us. Your page keeps the falling hearts.</p>
+
+        <div class="auth">
+            <div class="form" id="registerForm">
+                <h2>Register</h2>
+                <label for="regName">Full name</label>
+                <input id="regName" type="text" placeholder="Your name">
+                <label for="regEmail">Email</label>
+                <input id="regEmail" type="email" placeholder="you@example.com" required>
+                <label for="regPassword">Password</label>
+                <input id="regPassword" type="password" placeholder="Choose a password" required>
+                <button class="btn" id="registerBtn">Register</button>
+                <div style="margin-top:12px;text-align:center;font-size:13px;color:#5a1a2b;">
+                    <span>Already have an account? </span><a href="index.html" style="color:#c71b45;cursor:pointer;font-weight:600;text-decoration:none;">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Heart animation first (runs regardless of Firebase)
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.textContent = '❤';
+            const size = Math.random() * 20 + 16;
+            heart.style.fontSize = size + 'px';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.opacity = Math.random() * 0.5 + 0.5;
+            
+            const durations = ['fall1', 'fall2', 'fall3'];
+            heart.className = 'heart ' + durations[Math.floor(Math.random() * 3)];
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 7500);
+        }
+        
+        // Start hearts immediately
+        createHeart();
+        setInterval(createHeart, 400);
+
+        // Firebase Configuration (REPLACE WITH YOUR OWN FROM FIREBASE CONSOLE)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        let auth;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+        } catch(e) {
+            console.warn('Firebase not configured yet. Set your credentials in firebaseConfig.');
+        }
+
+        // Simple message overlay
+        function showMessage(text) {
+            if(!text) return;
+            const m = document.createElement('div');
+            m.className = 'message-overlay';
+            m.textContent = text;
+            document.body.appendChild(m);
+            setTimeout(() => m.remove(), 5000);
+        }
+
+        // Register handler
+        document.getElementById('registerBtn').addEventListener('click', async function(e){
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const pass = document.getElementById('regPassword').value;
+            if(!email || !pass) return alert('Please enter email and password');
+            if(pass.length < 6) return alert('Password must be at least 6 characters');
+            try {
+                const userCred = await auth.createUserWithEmailAndPassword(email, pass);
+                if(name) await userCred.user.updateProfile({ displayName: name });
+                showMessage('✓ Registered successfully!');
+                setTimeout(() => window.location.href = 'index.html', 2000);
+            } catch(err) {
+                alert('Error: ' + err.message);
+            }
+        });
+    </script>
+</body>
+</html>
