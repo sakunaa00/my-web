@@ -70,7 +70,7 @@
                 <input id="regPassword" type="password" placeholder="Choose a password" required>
                 <button class="btn" id="registerBtn">Register</button>
                 <div style="margin-top:12px;text-align:center;font-size:13px;color:#5a1a2b;">
-                    <span>Already have an account? </span><a href="index.html" style="color:#c71b45;cursor:pointer;font-weight:600;text-decoration:none;">Login</a>
+                    <span>Already have an account? </span><a href="index.php" style="color:#c71b45;cursor:pointer;font-weight:600;text-decoration:none;">Login</a>
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web Page</title>
+    <title>My baby baby</title>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
@@ -58,7 +58,7 @@
 <body>
     <div class="container">
         <h1>Welcome — Spread Some Love</h1>
-        <p>Use the forms to login or register (demo-only). Your page keeps the falling hearts.</p>
+        <p>login or register</p>
 
         <div class="auth">
             <div class="form" id="loginForm">
@@ -69,7 +69,7 @@
                 <input id="loginPassword" type="password" placeholder="Password" required>
                 <button class="btn" id="loginBtn">Login</button>
                 <div style="margin-top:12px;text-align:center;font-size:13px;color:#5a1a2b;">
-                    <span>Don't have an account? </span><a href="register.html" style="color:#c71b45;cursor:pointer;font-weight:600;text-decoration:none;">Register</a>
+                    <span>Don't have an account? </span><a href="register.php" style="color:#c71b45;cursor:pointer;font-weight:600;text-decoration:none;">Register</a>
                 </div>
             </div>
         </div>
