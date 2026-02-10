@@ -17,7 +17,10 @@ html, body {
     height: 100%;
     margin: 0;
     background: pink;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
     font-family: Arial, sans-serif;
     text-align: center;
 }
@@ -44,6 +47,8 @@ button {
     margin: 1vh;
     transition: 0.3s;
     touch-action: manipulation;
+    min-width: 44px;
+    min-height: 44px;
 }
 
 #yesBtn {
@@ -56,6 +61,7 @@ button {
     background: white;
     color: var(--primary);
     position: absolute;
+    margin-top: -0.1vw
 }
 
 .message {
@@ -64,6 +70,8 @@ button {
     margin-top: 3vh;
     display: none;
     line-height: 1.5;
+    padding: 0 12px;
+    word-break: break-word;
 }
 
 .hover-text {
@@ -75,6 +83,26 @@ button {
     align-items: center;
     justify-content: center;
 }
+
+
+/* Challenge UI */
+.challenge {
+    position: absolute;
+    left: 50%;
+    top: 8px;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.95);
+    padding: 8px 12px;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(179,0,59,0.12);
+    z-index: 20;
+    width: min(88%, 400px);
+    text-align: center;
+}
+.challenge-text { font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+.progress-bar { width: 100%; height: 10px; background: #ffe6ee; border-radius: 8px; overflow: hidden; }
+.progress-fill { width: 100%; height: 100%; background: linear-gradient(90deg,var(--primary),#ff6699); transform-origin: left; }
+.challenge-note { font-size: 12px; color: #8a0030; margin-top: 6px; }
 
 /* YES button glow animation */
 .glow {
@@ -119,10 +147,35 @@ button {
     animation: spinAnim 0.6s ease-in-out !important;
 }
 
+button:focus {
+    outline: 3px solid rgba(255,51,102,0.24);
+    outline-offset: 2px;
+}
+
 @keyframes spinAnim {
     0%, 100% { transform: rotateZ(0deg); }
     50% { transform: rotateZ(360deg); }
 }
+
+/* Animated gradient background */
+.animated-bg {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(120deg, #ffd1e6 0%, #ffd9f0 25%, #ffe6ff 50%, #ffd1e6 75%, #ffecf6 100%);
+    background-size: 400% 400%;
+    z-index: -1;
+    animation: gradientShift 12s ease infinite;
+    filter: saturate(1.05) contrast(1.02);
+}
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Large decorative hearts (subtle parallax) */
+.bg-hearts { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.12; }
+.bg-hearts svg { width: 100%; height: 100%; }
 
 /* Mobile adjustments */
 @media (max-width: 480px) {
@@ -138,6 +191,7 @@ button {
     #yesBtn {
         margin-left: -5vw;
     }
+    
 }
 
 /* Tablet adjustments */
@@ -147,10 +201,39 @@ button {
         width: 92vw;
     }
 }
+
+/* Respect user motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .animated-bg, .heart, .confetti, .svg-cat, .spin, .glow {
+        animation: none !important;
+        transition: none !important;
+    }
+    .cat-body, .cat-ear, .cat-tail, .cat-eye { animation: none !important; }
+}
 </style>
 </head>
 
 <body>
+
+<!-- animated gradient background -->
+<div class="animated-bg" aria-hidden="true"></div>
+
+<!-- subtle decorative hearts -->
+<div class="bg-hearts" aria-hidden="true">
+    <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+        <defs>
+            <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0%" stop-color="#ffd1e6" />
+                <stop offset="100%" stop-color="#ffe6ff" />
+            </linearGradient>
+        </defs>
+        <g fill="url(#g1)">
+            <path d="M100 150 C 100 100, 200 80, 250 130 C 300 80, 400 100, 400 150 C 400 220, 320 260, 250 320 C 180 260, 100 220, 100 150 Z" />
+            <path d="M500 60 C 500 20, 600 0, 650 40 C 700 0, 800 20, 800 60 C 800 110, 700 150, 650 190 C 600 150, 500 110, 500 60 Z" transform="translate(-80,220) scale(1.2)"/>
+            <path d="M300 350 C 300 300, 360 280, 400 320 C 440 280, 500 300, 500 350 C 500 420, 420 460, 350 520 C 280 460, 200 420, 200 350 Z" transform="translate(60,20) scale(0.9)"/>
+        </g>
+    </svg>
+</div>
 
 <h1>Will you be my Valentine? 💖</h1>
 
@@ -158,6 +241,15 @@ button {
     <button id="yesBtn">YES 💕</button>
     <button id="noBtn">NO 😜</button>
     <div class="hover-text" id="hoverText"></div>
+
+    <!-- Mini-challenge UI -->
+    <div class="challenge" id="challenge" aria-hidden="true" style="display:none;">
+        <div class="challenge-text">Catch me! ⏱️</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="challenge-note" id="challengeNote">Time left: <span id="timeLeft">0</span>s</div>
+    </div>
+
+    
 
     <div class="message" id="loveMessage">
         Happy Valentine's Day my love 💘<br>
@@ -188,6 +280,20 @@ function createHeart() {
     setTimeout(() => heart.remove(), 7000);
 }
 setInterval(createHeart, 400);
+// adjust heart creation frequency based on screen size and reduced-motion
+let heartIntervalId = null;
+function startHearts() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (heartIntervalId) clearInterval(heartIntervalId);
+    const small = window.innerWidth < 420 || window.innerHeight < 500;
+    const interval = small ? 900 : 400;
+    heartIntervalId = setInterval(createHeart, interval);
+}
+startHearts();
+window.addEventListener('resize', () => {
+    startHearts();
+    positionNoButton();
+});
 
 function moveNOButton() {
     const maxX = container.clientWidth - noBtn.offsetWidth;
@@ -212,6 +318,175 @@ noBtn.addEventListener("touchstart", (e) => {
     e.preventDefault();
     moveNOButton();
 });
+
+// MINI-CHALLENGE: timed chase to catch NO
+let challengeActive = false;
+let challengeTimer = null;
+let challengeInterval = null;
+const challengeEl = document.getElementById('challenge');
+const progressFill = document.getElementById('progressFill');
+const timeLeftEl = document.getElementById('timeLeft');
+
+function startChallenge(duration = 6) {
+    if (challengeActive) return;
+    challengeActive = true;
+    challengeEl.style.display = 'block';
+    challengeEl.setAttribute('aria-hidden', 'false');
+    let remaining = duration;
+    timeLeftEl.textContent = remaining;
+    progressFill.style.transform = 'scaleX(1)';
+
+    // move more aggressively
+    challengeInterval = setInterval(() => {
+        moveNOButton();
+    }, 450);
+
+    const start = Date.now();
+    challengeTimer = setInterval(() => {
+        const elapsed = (Date.now() - start) / 1000;
+        remaining = Math.max(0, Math.ceil(duration - elapsed));
+        timeLeftEl.textContent = remaining;
+        const t = Math.min(1, (duration - elapsed) / duration);
+        progressFill.style.transform = `scaleX(${t})`;
+        if (elapsed >= duration) {
+            endChallenge(false);
+        }
+    }, 120);
+}
+
+function endChallenge(success) {
+    challengeActive = false;
+    clearInterval(challengeInterval);
+    clearInterval(challengeTimer);
+    challengeInterval = null;
+    challengeTimer = null;
+    challengeEl.style.display = 'none';
+    challengeEl.setAttribute('aria-hidden', 'true');
+    progressFill.style.transform = 'scaleX(0)';
+    timeLeftEl.textContent = '0';
+    if (success) {
+        // reward: brief confetti canvas and sound
+        playCheer();
+        canvasConfetti();
+        hoverText.textContent = 'You caught me! 🎉';
+    } else {
+        playWhoosh();
+        hoverText.textContent = 'Too slow... try again!';
+    }
+    setTimeout(() => { hoverText.textContent = ''; }, 2800);
+}
+
+// Clicking NO starts the challenge; clicking it again during challenge catches it
+noBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!challengeActive) {
+        startChallenge(6);
+    } else {
+        // caught
+        endChallenge(true);
+    }
+});
+
+// Ensure NO button has an initial, safe position inside the container
+function positionNoButton() {
+    try {
+        // Try to position NO to the right of YES if there's room
+        const yesRect = yesBtn.getBoundingClientRect();
+        const contRect = container.getBoundingClientRect();
+        const yesLeft = yesRect.left - contRect.left;
+        const yesTop = yesRect.top - contRect.top;
+        const spaceRight = container.clientWidth - (yesLeft + yesBtn.offsetWidth);
+        let left;
+        if (spaceRight > noBtn.offsetWidth + 12) {
+            left = yesLeft + yesBtn.offsetWidth + 12; // place to the right with gap
+        } else {
+            // fallback: center inside container
+            left = Math.max(6, Math.min((container.clientWidth - noBtn.offsetWidth) / 2, container.clientWidth - noBtn.offsetWidth - 6));
+        }
+        // align vertical centers with YES button
+        let top = yesTop + (yesBtn.offsetHeight - noBtn.offsetHeight) / 2;
+        // clamp inside container
+        left = Math.max(6, Math.min(left, container.clientWidth - noBtn.offsetWidth - 6));
+        top = Math.max(6, Math.min(top, container.clientHeight - noBtn.offsetHeight - 6));
+        noBtn.style.left = left + 'px';
+        noBtn.style.top = top + 'px';
+    } catch (err) { /* ignore if elements not ready */ }
+}
+window.addEventListener('load', () => positionNoButton());
+
+// AUDIO: WebAudio simple effects
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+const audioCtx = AudioCtx ? new AudioCtx() : null;
+
+function playWhoosh() {
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, now);
+    osc.frequency.exponentialRampToValueAtTime(200, now + 0.25);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(now); osc.stop(now + 0.35);
+}
+
+function playCheer() {
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    const freqs = [440, 660, 880];
+    freqs.forEach((f, i) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(f, now + i * 0.03);
+        g.gain.setValueAtTime(0.0001, now + i * 0.03);
+        g.gain.exponentialRampToValueAtTime(0.12, now + i * 0.03 + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.03 + 0.5);
+        o.connect(g).connect(audioCtx.destination);
+        o.start(now + i * 0.03); o.stop(now + i * 0.03 + 0.6);
+    });
+}
+
+// Canvas confetti (lightweight)
+function canvasConfetti() {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'fixed';
+    canvas.style.left = 0; canvas.style.top = 0; canvas.style.pointerEvents = 'none';
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight; canvas.style.zIndex = 2000;
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+    const colors = ['#ff3366','#ff6699','#ffd1e6','#ffccf0','#ffb3c7'];
+    for (let i=0;i<80;i++) {
+        particles.push({
+            x: Math.random()*canvas.width,
+            y: Math.random()*canvas.height*0.2,
+            vx: (Math.random()-0.5)*6,
+            vy: Math.random()*4+2,
+            r: Math.random()*6+3,
+            color: colors[Math.floor(Math.random()*colors.length)],
+            rot: Math.random()*Math.PI*2,
+            vr: (Math.random()-0.5)*0.2
+        });
+    }
+    let elapsed = 0;
+    function frame(dt) {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for (let p of particles) {
+            p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vy += 0.05;
+            ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+            ctx.fillStyle = p.color; ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*1.6);
+            ctx.restore();
+        }
+        elapsed += 16;
+        if (elapsed < 1800) requestAnimationFrame(frame);
+        else { document.body.removeChild(canvas); }
+    }
+    requestAnimationFrame(frame);
+}
 
 // YES button click
 yesBtn.addEventListener("click", () => {
@@ -243,6 +518,8 @@ function createConfetti() {
         setTimeout(() => confetti.remove(), parseFloat(confetti.style.animationDuration) * 1000);
     }
 }
+
+
 </script>
 
 </body>
