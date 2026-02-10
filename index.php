@@ -1,148 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My baby baby</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
-    <style>
-        /* Keep current pink + falling-heart design */
-        html, body { height: 100%; margin: 0; }
-        body { position: relative; overflow: visible; background: pink; font-family: system-ui, Arial, sans-serif; color: #3a0320; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Valentine's 💖</title>
 
-        /* top card container for forms */
-        .container { max-width: 980px; margin: 4vh auto; padding: 20px; background: rgba(255,255,255,0.92); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); z-index: 6; position: relative; }
-        .container h1 { margin: 0 0 6px; font-size: 26px; color: #8a0b2a; text-align: center; }
-        .container p { margin: 0 0 14px; text-align: center; color: #5a1227; }
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+    background: pink;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
 
-        /* Auth forms layout */
-        .auth { display: flex; gap: 20px; justify-content: center; align-items: flex-start; }
-        .form { background: white; padding: 14px; border-radius: 10px; width: 320px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
-        .form h2 { margin: 0 0 10px; font-size: 18px; color: #7a0b2a; }
-        .form label { display:block; font-size: 13px; color:#5a1a2b; margin-bottom:6px; }
-        .form input { width: 100%; padding: 9px 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08); box-sizing: border-box; }
-        .form small { display:block; color:#6a2a3a; margin-bottom:8px; }
-        .form .btn { width: 100%; padding:10px; border-radius:8px; border: none; background: #c71b45; color: white; font-weight:600; cursor:pointer; }
+h1 {
+    margin-top: 80px;
+    color: #b3003b;
+}
 
-        /* Falling hearts (preserve) */
-        .heart { position: fixed; top: 0; font-size: 32px; color: #ff1744; pointer-events: none; z-index: 999; }
-        .heart.fall1 { animation: fall 5s linear forwards; }
-        .heart.fall2 { animation: fall 6s linear forwards; }
-        .heart.fall3 { animation: fall 7s linear forwards; }
-        @keyframes fall { 
-            0% { top: -50px; opacity: 1; }
-            100% { top: 100vh; opacity: 0; }
-        }
+.game-box {
+    position: relative;
+    height: 400px;
+    width: 600px;
+    margin: 20px auto 0 auto;
+}
 
-        /* overlay message */
-        .message-overlay { position: fixed; left: 50%; top: 18%; transform: translateX(-50%); z-index: 60; background: rgba(255,255,255,0.97); padding: 16px 20px; border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12); max-width: 90%; text-align: center; color: #7a0b2a; }
+button {
+    padding: 12px 25px;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.3s;
+}
 
-        /* Mobile optimizations */
-        @media (max-width: 820px) {
-            .auth { flex-direction: column; align-items: center; }
-            .form { width: 100%; max-width: 420px; }
-            .container { margin: 3vh 12px; padding: 16px; }
-            .container h1 { font-size: 20px; }
-            textarea#messageInput { min-height: 90px; }
-        }
+#yesBtn {
+    background: #ff3366;
+    color: white;
+    margin-left: -110px;
+}
 
-        @media (max-width: 420px) {
-            .form h2 { font-size: 16px; }
-            .form input { padding: 10px; }
-            .message-overlay { top: 12%; font-size: 18px; }
-        }
-    </style>
+#noBtn {
+    background: white;
+    color: #ff3366;
+    position: absolute;
+}
+
+.message {
+    font-size: 28px;
+    color: #b3003b;
+    margin-top: 30px;
+    display: none;
+}
+
+.hover-text {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #8a0030;
+    height: 30px;
+}
+
+/* YES button glow animation */
+.glow {
+    animation: glowAnim 1s ease-in-out infinite alternate;
+}
+
+@keyframes glowAnim {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px #ff3366;
+    }
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 30px #ff6699;
+    }
+    100% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px #ff3366;
+    }
+}
+
+/* Falling hearts */
+.heart {
+    position: fixed;
+    top: -50px;
+    font-size: 24px;
+    color: #ff1744;
+    pointer-events: none;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Welcome — Spread Some Love</h1>
-        <p>login or register</p>
 
-        <div class="auth">
-            <div class="form" id="loginForm">
-                <h2>Login</h2>
-                <label for="loginEmail">Email</label>
-                <input id="loginEmail" type="email" placeholder="you@example.com" required>
-                <label for="loginPassword">Password</label>
-                <input id="loginPassword" type="password" placeholder="Password" required>
-                <button class="btn" id="loginBtn">Login</button>
-                <div style="margin-top:12px;text-align:center;font-size:13px;color:#5a1a2b;">
-                    <span>Don't have an account? </span><a href="register.php" style="color:#c71b45;cursor:pointer;font-weight:600;text-decoration:none;">Register</a>
-                </div>
-            </div>
-        </div>
+<h1>Will you be my Valentine? 💖</h1>
 
-        
+<div class="game-box">
+    <button id="yesBtn">YES 💕</button>
+    <button id="noBtn">NO 😜</button>
+    <div class="hover-text" id="hoverText"></div>
+
+    <div class="message" id="loveMessage">
+        Happy Valentine's Day my love 💘<br>
+        I love you so much ❤️
     </div>
+</div>
 
-    <script src="firebase-config.js"></script>
-    <script>
-        // Heart animation first (runs regardless of Firebase)
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.textContent = '❤';
-            const size = Math.random() * 20 + 16;
-            heart.style.fontSize = size + 'px';
-            heart.style.left = Math.random() * 100 + '%';
-            heart.style.opacity = Math.random() * 0.5 + 0.5;
-            
-            const durations = ['fall1', 'fall2', 'fall3'];
-            heart.className = 'heart ' + durations[Math.floor(Math.random() * 3)];
-            document.body.appendChild(heart);
-            
-            setTimeout(() => heart.remove(), 7500);
-        }
-        
-        // Start hearts immediately
-        createHeart();
-        setInterval(createHeart, 400);
+<script>
+// Falling hearts
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.textContent = "❤";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random() * 20 + 16) + "px";
+    heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 7000);
+}
+setInterval(createHeart, 400);
 
-        // Firebase Configuration — loaded from firebase-config.js
-        const firebaseConfig = window.firebaseConfig || null;
-        if (!firebaseConfig) {
-            console.warn('Firebase not configured yet. Create `firebase-config.js` and set `window.firebaseConfig`.');
-        }
-        try {
-            if (firebaseConfig) {
-                firebase.initializeApp(firebaseConfig);
-                const auth = firebase.auth();
-            }
-        } catch(e) {
-            console.warn('Firebase initialization error:', e);
-        }
+// Elements
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const hoverText = document.getElementById("hoverText");
+const loveMessage = document.getElementById("loveMessage");
 
-        // Simple message overlay
-        function showMessage(text) {
-            if(!text) return;
-            const m = document.createElement('div');
-            m.className = 'message-overlay';
-            m.textContent = text;
-            document.body.appendChild(m);
-            setTimeout(() => m.remove(), 5000);
-        }
+const messages = [
+    "Are you sure? 🥺",
+    "Think again 😢",
+    "Don't break my heart 💔",
+    "Pretty please? 💕",
+    "You can't catch me 😜",
+    "Last chance 😏",
+    "I promise I'll be good! 😇",
+    "I need you! 😭",
+    "I can't live without you! 😩"
+];
 
-        // Login handler
-        document.getElementById('loginBtn').addEventListener('click', function(e){
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const pass = document.getElementById('loginPassword').value;
-            if(!email || !pass) return alert('Please enter email and password');
-            showMessage('Logged in (demo): ' + email);
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPassword').value = '';
-        });
-    </script>
-</body>
-</html>
+// NO button movement inside game box
+noBtn.addEventListener("mouseover", () => {
+    const container = document.querySelector(".game-box");
+    const maxX = container.clientWidth - noBtn.offsetWidth;
+    const maxY = container.clientHeight - noBtn.offsetHeight;
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
+    hoverText.textContent = messages[Math.floor(Math.random() * messages.length)];
+});
 
+// YES button click
+yesBtn.addEventListener("click", () => {
+    loveMessage.style.display = "block";
+    hoverText.textContent = "";
+    noBtn.style.display = "none";
+    yesBtn.classList.add("glow");
+});
+</script>
 
-
-
-
-
-    
-    
 </body>
 </html>
