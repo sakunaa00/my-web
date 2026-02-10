@@ -250,7 +250,7 @@ button:focus {
 
     <!-- Mini-challenge UI -->
     <div class="challenge" id="challenge" aria-hidden="true" style="display:none;">
-        <div class="challenge-text">Catch me! ⏱️</div>
+        <div class="challenge-text">Catch me!!! ⏱️</div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
         <div class="challenge-note" id="challengeNote">Time left: <span id="timeLeft">0</span>s</div>
     </div>
@@ -258,8 +258,8 @@ button:focus {
     
 
     <div class="message" id="loveMessage">
-        Happy Valentine's Day my love 💘<br>
-        I love you so much ❤️
+        Happy Valentine's Day my babyyy 💘<br>
+        I loveeee youuu so muchhhhhhhhh!!!!! ❤️
     </div>
 </div>
 
@@ -319,10 +319,16 @@ function moveNOButton() {
     }
 }
 
-noBtn.addEventListener("mouseover", moveNOButton);
-noBtn.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    moveNOButton();
+// NO button moves on click (not hover)
+noBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (!challengeActive) {
+        // Start the challenge when NO is clicked
+        startChallenge(6);
+    } else {
+        // During challenge, clicking it catches it
+        endChallenge(true);
+    }
 });
 
 // MINI-CHALLENGE: timed chase to catch NO
@@ -383,15 +389,7 @@ function endChallenge(success) {
 }
 
 // Clicking NO starts the challenge; clicking it again during challenge catches it
-noBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (!challengeActive) {
-        startChallenge(6);
-    } else {
-        // caught
-        endChallenge(true);
-    }
-});
+// This function is now removed since click behavior is handled above
 
 // Ensure NO button has an initial, safe position inside the container
 function positionNoButton() {
