@@ -3,531 +3,497 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Bungisngis 💖</title>
+<meta name="theme-color" content="#f7f8f4">
+<title>Akira Franse Ybañez | AI Automation Specialist</title>
 
 <style>
 :root {
-    --primary: #ff3366;
-    --secondary: #b3003b;
-    --tertiary: #8a0030;
-    --heart-color: #ff1744;
+    --ink: #17211f;
+    --muted: #68736f;
+    --paper: #f7f8f4;
+    --card: #ffffff;
+    --line: #dce4df;
+    --mint: #b9e3d2;
+    --teal: #1e6b5b;
+    --coral: #e7795d;
 }
 
-html, body {
-    height: 100%;
+* {
+    box-sizing: border-box;
+}
+
+body {
     margin: 0;
-    background: pink;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "DM Sans", sans-serif;
+    line-height: 1.5;
     overflow-x: hidden;
-    overflow-y: auto;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    font-family: Arial, sans-serif;
-    text-align: center;
+}
+
+a {
+    color: inherit;
+}
+
+.page {
+    width: min(1120px, calc(100% - 40px));
+    padding-right: env(safe-area-inset-right);
+    padding-left: env(safe-area-inset-left);
+    margin: 0 auto;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    letter-spacing: .02em;
+}
+
+.mark-dot {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--coral);
+}
+
+nav a {
+    margin-left: 24px;
+    color: var(--muted);
+    font-size: .9rem;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: var(--teal);
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1.05fr .55fr .7fr;
+    gap: 72px;
+    align-items: end;
+    padding: 92px 0 80px;
+}
+
+.profile-photo {
+    width: 100%;
+    max-width: 250px;
+    aspect-ratio: 4 / 5;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 10px solid var(--card);
+    box-shadow: 0 16px 34px rgba(23, 33, 31, .12);
+    background: var(--mint);
+    transform: rotate(2deg);
+}
+
+.profile-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.eyebrow {
+    margin: 0 0 20px;
+    color: var(--teal);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
 }
 
 h1 {
-    margin: 5vh 0 2vh;
-    color: var(--secondary);
-    font-size: clamp(1.5rem, 5vw, 3rem);
+    max-width: 700px;
+    margin: 0;
+    font-family: Georgia, serif;
+    font-size: clamp(3rem, 7vw, 6.6rem);
+    font-weight: 400;
+    letter-spacing: -.055em;
+    line-height: .96;
 }
 
-.game-box {
-    position: relative;
-    height: 50vh;
-    width: clamp(200px, 90vw, 600px);
-    margin: 2vh auto 0;
+.intro {
+    max-width: 460px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.08rem;
 }
 
-button {
-    padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px);
-    font-size: clamp(14px, 3vw, 20px);
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    margin: 1vh;
-    transition: 0.3s;
-    touch-action: manipulation;
-    min-width: 44px;
-    min-height: 44px;
-}
-
-#yesBtn {
-    background: var(--primary);
-    color: white;
-    margin-left: -7vw;
-}
-
-#noBtn {
-    background: white;
-    color: var(--primary);
-    position: absolute;
-    margin-top: -0.1vw
-}
-
-.message {
-    font-size: clamp(18px, 4vw, 32px);
-    color: var(--secondary);
-    margin-top: 3vh;
-    display: none;
-    line-height: 1.5;
-    padding: 0 12px;
-    word-break: break-word;
-}
-
-.hover-text {
-    margin-top: 2vh;
-    font-size: clamp(14px, 3vw, 22px);
-    color: var(--tertiary);
-    height: 3vh;
+.hero-links {
     display: flex;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+.button {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 12px 17px;
+    border: 1px solid var(--ink);
+    border-radius: 4px;
+    font-size: .9rem;
+    font-weight: 700;
+    text-decoration: none;
 }
 
-
-/* Challenge UI */
-.challenge {
-    position: absolute;
-    left: 50%;
-    top: 8px;
-    transform: translateX(-50%);
-    background: rgba(255,255,255,0.95);
-    padding: 8px 12px;
-    border-radius: 10px;
-    box-shadow: 0 6px 18px rgba(179,0,59,0.12);
-    z-index: 20;
-    width: min(88%, 400px);
-    text-align: center;
-}
-.challenge-text { font-weight: 700; color: var(--primary); margin-bottom: 6px; }
-.progress-bar { width: 100%; height: 10px; background: #ffe6ee; border-radius: 8px; overflow: hidden; }
-.progress-fill { width: 100%; height: 100%; background: linear-gradient(90deg,var(--primary),#ff6699); transform-origin: left; }
-.challenge-note { font-size: 12px; color: #8a0030; margin-top: 6px; }
-
-/* YES button glow animation */
-.glow {
-    animation: glowAnim 1s ease-in-out infinite alternate;
+.button.primary {
+    background: var(--ink);
+    color: white;
 }
 
-@keyframes glowAnim {
-    0% { transform: scale(1); box-shadow: 0 0 10px var(--primary); }
-    50% { transform: scale(1.2); box-shadow: 0 0 30px #ff6699; }
-    100% { transform: scale(1.1); box-shadow: 0 0 20px var(--primary); }
+.button.secondary {
+    border-color: var(--line);
+    color: var(--teal);
 }
 
-.heart {
-    position: fixed;
-    top: -50px;
-    font-size: 24px;
-    color: var(--heart-color);
-    pointer-events: none;
-    animation: fall linear forwards;
-    will-change: transform;
+.profile-note {
+    padding: 28px;
+    border-left: 3px solid var(--coral);
+    background: var(--mint);
 }
 
-@keyframes fall {
-    to { transform: translateY(100vh); opacity: 0; }
+.profile-note strong {
+    display: block;
+    margin-bottom: 14px;
+    font-family: Georgia, serif;
+    font-size: 1.65rem;
+    font-weight: 400;
+    line-height: 1.1;
 }
 
-
-.spin {
-    animation: spinAnim 0.6s ease-in-out !important;
+.profile-note p {
+    margin: 0;
+    color: #36594e;
+    font-size: .92rem;
 }
 
-button:focus {
-    outline: 3px solid rgba(255,51,102,0.24);
-    outline-offset: 2px;
+section {
+    padding: 54px 0;
+    border-top: 1px solid var(--line);
 }
 
-@keyframes spinAnim {
-    0%, 100% { transform: rotateZ(0deg); }
-    50% { transform: rotateZ(360deg); }
+.section-heading {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 32px;
+    margin-bottom: 34px;
 }
 
-/* Animated gradient background */
-.animated-bg {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(120deg, #ffd1e6 0%, #ffd9f0 25%, #ffe6ff 50%, #ffd1e6 75%, #ffecf6 100%);
-    background-size: 400% 400%;
-    z-index: -1;
-    animation: gradientShift 12s ease infinite;
-    filter: saturate(1.05) contrast(1.02);
-}
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+h2 {
+    margin: 0;
+    font-family: Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -.03em;
 }
 
-/* Large decorative hearts (subtle parallax) */
-.bg-hearts { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.12; }
-.bg-hearts svg { width: 100%; height: 100%; }
+.section-heading p {
+    max-width: 620px;
+    margin: 6px 0 0;
+    color: var(--muted);
+}
 
-/* Mobile adjustments */
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
 
+.skill {
+    padding: 9px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--card);
+    font-size: .9rem;
+}
 
+.services {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
 
-@media (max-width: 480px) {
-    .game-box {
-        height: 45vh;
-        width: 95vw;
+.service {
+    min-height: 180px;
+    padding: 24px;
+    border-top: 2px solid var(--teal);
+    background: var(--card);
+}
+
+.service-number {
+    color: var(--coral);
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+.service h3 {
+    margin: 26px 0 8px;
+    font-size: 1.05rem;
+}
+
+.service p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+.contact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    padding-bottom: 72px;
+}
+
+.contact h2 {
+    max-width: 520px;
+}
+
+.contact-details {
+    display: grid;
+    gap: 7px;
+    color: var(--muted);
+    font-size: .93rem;
+    text-align: right;
+}
+
+.contact-details a {
+    color: var(--teal);
+    font-weight: 700;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+footer {
+    padding: 20px 0 max(28px, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: .8rem;
+}
+
+@media (max-width: 900px) {
+    .hero {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 72px 0 64px;
     }
-    
-    button {
-        margin: 0.5vh;
-    }
-    
-    #yesBtn {
-        margin-left: -23vw;
-    }
-    #noBtn {
-        margin-top: -0.1vw
-    }
-    #challenge {
-        margin-top: -1.5vw
-    }
-    
-}
 
-/* Tablet adjustments */
-@media (min-width: 481px) and (max-width: 1024px) {
-    .game-box {
-        height: 48vh;
-        width: 92vw;
+    .profile-photo {
+        order: -1;
+        max-width: 230px;
+        margin: 0;
+    }
+
+    .profile-note {
+        max-width: 560px;
+    }
+
+    .services {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
-/* Respect user motion preference */
+@media (max-width: 720px) {
+    .page {
+        width: min(100% - 28px, 560px);
+    }
+
+    header {
+        padding: 20px 0;
+    }
+
+    nav a {
+        margin-left: 12px;
+        font-size: .8rem;
+    }
+
+    nav a:first-child {
+        display: none;
+    }
+
+    h1 {
+        font-size: clamp(3rem, 17vw, 5.4rem);
+    }
+
+    .section-heading,
+    .services {
+        grid-template-columns: 1fr;
+    }
+
+    .section-heading {
+        gap: 10px;
+    }
+
+    .contact {
+        display: grid;
+    }
+
+    .contact-details {
+        text-align: left;
+    }
+}
+
+@media (max-width: 420px) {
+    .page {
+        width: calc(100% - 24px);
+    }
+
+    header {
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .mark {
+        max-width: 210px;
+        font-size: .85rem;
+    }
+
+    nav {
+        flex-shrink: 0;
+    }
+
+    .hero {
+        padding: 52px 0 48px;
+    }
+
+    .profile-photo {
+        max-width: 190px;
+    }
+
+    .hero-links {
+        align-items: stretch;
+        flex-direction: column;
+        max-width: 220px;
+    }
+
+    .button {
+        justify-content: center;
+    }
+
+    section {
+        padding: 44px 0;
+    }
+
+    h2 {
+        font-size: 1.95rem;
+    }
+
+    .profile-note,
+    .service {
+        padding: 20px;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .animated-bg, .heart, .confetti, .svg-cat, .spin, .glow {
-        animation: none !important;
-        transition: none !important;
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
     }
-    .cat-body, .cat-ear, .cat-tail, .cat-eye { animation: none !important; }
 }
+
+
 </style>
 </head>
 
 <body>
 
-<!-- animated gradient background -->
-<div class="animated-bg" aria-hidden="true"></div>
+<main class="page">
+    <header>
+        <div class="mark"><span class="mark-dot"></span> AKIRA FRANSE YBAÑEZ</div>
+        <nav aria-label="Main navigation">
+            <a href="#skills">Skills</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
 
-<!-- subtle decorative hearts -->
-<div class="bg-hearts" aria-hidden="true">
-    <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
-        <defs>
-            <linearGradient id="g1" x1="0" x2="1">
-                <stop offset="0%" stop-color="#ffd1e6" />
-                <stop offset="100%" stop-color="#ffe6ff" />
-            </linearGradient>
-        </defs>
-        <g fill="url(#g1)">
-            <path d="M100 150 C 100 100, 200 80, 250 130 C 300 80, 400 100, 400 150 C 400 220, 320 260, 250 320 C 180 260, 100 220, 100 150 Z" />
-            <path d="M500 60 C 500 20, 600 0, 650 40 C 700 0, 800 20, 800 60 C 800 110, 700 150, 650 190 C 600 150, 500 110, 500 60 Z" transform="translate(-80,220) scale(1.2)"/>
-            <path d="M300 350 C 300 300, 360 280, 400 320 C 440 280, 500 300, 500 350 C 500 420, 420 460, 350 520 C 280 460, 200 420, 200 350 Z" transform="translate(60,20) scale(0.9)"/>
-        </g>
-    </svg>
-</div>
+    <section class="hero">
+        <div>
+            <p class="eyebrow">AI automation specialist</p>
+            <h1>Make good work feel effortless.</h1>
+            <p class="intro">I design practical AI workflows that reduce repetitive work, connect your tools, and give your team more time for what matters.</p>
+            <div class="hero-links">
+                <a class="button primary" href="mailto:kyo.zapier@gmail.com">Let's talk <span aria-hidden="true">↗</span></a>
+                <a class="button secondary" href="#skills">View skills</a>
+            </div>
+        </div>
+        <figure class="profile-photo">
+            <img src="profile.jpeg" alt="Portrait of Akira Franse Ybañez">
+        </figure>
+        <aside class="profile-note">
+            <strong>Thoughtful systems.<br>Useful outcomes.</strong>
+            <p>Based in Your City · Available for freelance projects and collaborations</p>
+        </aside>
+    </section>
 
-<h1>Will you be my Valentine? 💖</h1>
+    <section id="skills">
+        <div class="section-heading">
+            <h2>What I bring</h2>
+            <p>A blend of technical curiosity and process thinking, focused on automation that people can actually use.</p>
+        </div>
+        <div class="skills" aria-label="Skills">
+            <span class="skill">AI workflow design</span>
+            <span class="skill">Prompt engineering</span>
+            <span class="skill">No-code automation</span>
+            <span class="skill">API integrations</span>
+            <span class="skill">Process mapping</span>
+            <span class="skill">Chatbot design</span>
+            <span class="skill">Data organization</span>
+            <span class="skill">Documentation</span>
+        </div>
+    </section>
 
-<div class="game-box">
-    <button id="yesBtn">YES 💕</button>
-    <button id="noBtn">NO 😜</button>
-    <div class="hover-text" id="hoverText"></div>
+    <section>
+        <div class="section-heading">
+            <h2>How I help</h2>
+            <p>From the first messy process map to a workflow your team trusts every day.</p>
+        </div>
+        <div class="services">
+            <article class="service">
+                <span class="service-number">01</span>
+                <h3>Automate the routine</h3>
+                <p>Turn recurring manual tasks into reliable, time-saving systems.</p>
+            </article>
+            <article class="service">
+                <span class="service-number">02</span>
+                <h3>Connect your tools</h3>
+                <p>Make the apps you already use share information smoothly.</p>
+            </article>
+            <article class="service">
+                <span class="service-number">03</span>
+                <h3>Make AI practical</h3>
+                <p>Build focused assistants and prompts around real business needs.</p>
+            </article>
+        </div>
+    </section>
 
-    <!-- Mini-challenge UI -->
-    <div class="challenge" id="challenge" aria-hidden="true" style="display:none;">
-        <div class="challenge-text">Catch me!!! ⏱️</div>
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="challenge-note" id="challengeNote">Time left: <span id="timeLeft">0</span>s</div>
-    </div>
+    <section class="contact" id="contact">
+        <h2>Have a process that could work smarter?</h2>
+        <div class="contact-details">
+            <a href="mailto:kyo.zapier@gmail.com">kyo.zapier@gmail.com</a>
+            <span>+1 (555) 123-4567</span>
+            <span>linkedin.com/in/Akira Franse Ybañez</span>
+        </div>
+    </section>
 
-    
-
-    <div class="message" id="loveMessage">
-        Happy Valentine's Day my babyyy 💘<br>
-        I loveeee youuu so muchhhhhhhhh!!!!! ❤️
-    </div>
-</div>
+    <footer>© 2026 Akira Franse Ybañez · AI automation and workflow design</footer>
+</main>
 
 <script>
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-const hoverText = document.getElementById("hoverText");
-const container = document.querySelector(".game-box");
-const messages = [
-    "Are you sure? 🥺", "Think again 😢", "Don't break my heart 💔",
-    "Pretty please? 💕", "You can't catch me 😜", "Last chance 😏",
-    "I promise I'll be good! 😇", "I need you! 😭", "I can't live without you! 😩"
-];
-const msgLen = messages.length;
-
-function createHeart() {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = "❤";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 20 + 16 + "px";
-    heart.style.animationDuration = Math.random() * 3 + 4 + "s";
-    document.body.appendChild(heart);
-    // remove when animation ends to avoid timing mismatches
-    const removeOnEnd = () => { heart.removeEventListener('animationend', removeOnEnd); if (heart.parentNode) heart.parentNode.removeChild(heart); };
-    heart.addEventListener('animationend', removeOnEnd);
-}
-// Heart spawner using requestAnimationFrame for smoother timing and fewer timers
-let lastSpawn = 0;
-let spawnInterval = 400; // ms, adjusted in startHearts
-let heartsRunning = false;
-function startHearts() {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { heartsRunning = false; return; }
-    const small = window.innerWidth < 420 || window.innerHeight < 500;
-    spawnInterval = small ? 900 : 400;
-    if (!heartsRunning) {
-        heartsRunning = true;
-        requestAnimationFrame(heartLoop);
-    }
-}
-
-function stopHearts() {
-    heartsRunning = false;
-}
-
-function heartLoop(ts) {
-    if (!heartsRunning) return;
-    if (!lastSpawn) lastSpawn = ts;
-    if (ts - lastSpawn >= spawnInterval) {
-        createHeart();
-        lastSpawn = ts;
-    }
-    requestAnimationFrame(heartLoop);
-}
-
-startHearts();
-
-// Debounced resize to avoid thrashing layout handlers
-function debounce(fn, wait = 120) {
-    let t = null;
-    return function(...args) {
-        clearTimeout(t);
-        t = setTimeout(() => fn.apply(this, args), wait);
-    };
-}
-
-const onResize = debounce(() => { startHearts(); positionNoButton(); }, 150);
-window.addEventListener('resize', onResize);
-
-function moveNOButton() {
-    const maxX = container.clientWidth - noBtn.offsetWidth;
-    const maxY = container.clientHeight - noBtn.offsetHeight;
-    noBtn.style.left = Math.random() * maxX + "px";
-    noBtn.style.top = Math.random() * maxY + "px";
-    hoverText.textContent = messages[Math.floor(Math.random() * msgLen)];
-    
-    // Add spin animation
-    noBtn.classList.remove("spin");
-    void noBtn.offsetWidth; // Trigger reflow
-    noBtn.classList.add("spin");
-    
-    // Haptic feedback
-    if (navigator.vibrate) {
-        navigator.vibrate(50);
-    }
-}
-
-// NO button moves on click (not hover)
-noBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    if (!challengeActive) {
-        // Start the challenge when NO is clicked
-        startChallenge(6);
-    } else {
-        // During challenge, clicking it catches it
-        endChallenge(true);
-    }
-});
-
-// MINI-CHALLENGE: timed chase to catch NO
-let challengeActive = false;
-let challengeTimer = null;
-let challengeInterval = null;
-const challengeEl = document.getElementById('challenge');
-const progressFill = document.getElementById('progressFill');
-const timeLeftEl = document.getElementById('timeLeft');
-
-function startChallenge(duration = 6) {
-    if (challengeActive) return;
-    challengeActive = true;
-    challengeEl.style.display = 'block';
-    challengeEl.setAttribute('aria-hidden', 'false');
-    let remaining = duration;
-    timeLeftEl.textContent = remaining;
-    progressFill.style.transform = 'scaleX(1)';
-
-    // move more aggressively
-    challengeInterval = setInterval(() => {
-        moveNOButton();
-    }, 450);
-
-    const start = Date.now();
-    challengeTimer = setInterval(() => {
-        const elapsed = (Date.now() - start) / 1000;
-        remaining = Math.max(0, Math.ceil(duration - elapsed));
-        timeLeftEl.textContent = remaining;
-        const t = Math.min(1, (duration - elapsed) / duration);
-        progressFill.style.transform = `scaleX(${t})`;
-        if (elapsed >= duration) {
-            endChallenge(false);
-        }
-    }, 120);
-}
-
-function endChallenge(success) {
-    challengeActive = false;
-    clearInterval(challengeInterval);
-    clearInterval(challengeTimer);
-    challengeInterval = null;
-    challengeTimer = null;
-    challengeEl.style.display = 'none';
-    challengeEl.setAttribute('aria-hidden', 'true');
-    progressFill.style.transform = 'scaleX(0)';
-    timeLeftEl.textContent = '0';
-    if (success) {
-        // reward: brief confetti canvas and sound
-        playCheer();
-        canvasConfetti();
-        hoverText.textContent = 'You caught me! 🎉';
-    } else {
-        playWhoosh();
-        hoverText.textContent = 'Too slow... try again!';
-    }
-    setTimeout(() => { hoverText.textContent = ''; }, 2800);
-}
-
-// Clicking NO starts the challenge; clicking it again during challenge catches it
-// This function is now removed since click behavior is handled above
-
-// Ensure NO button has an initial, safe position inside the container
-function positionNoButton() {
-    try {
-        // Try to position NO to the right of YES if there's room
-        const yesRect = yesBtn.getBoundingClientRect();
-        const contRect = container.getBoundingClientRect();
-        const yesLeft = yesRect.left - contRect.left;
-        const yesTop = yesRect.top - contRect.top;
-        const spaceRight = container.clientWidth - (yesLeft + yesBtn.offsetWidth);
-        let left;
-        if (spaceRight > noBtn.offsetWidth + 12) {
-            left = yesLeft + yesBtn.offsetWidth + 12; // place to the right with gap
-        } else {
-            // fallback: center inside container
-            left = Math.max(6, Math.min((container.clientWidth - noBtn.offsetWidth) / 2, container.clientWidth - noBtn.offsetWidth - 6));
-        }
-        // align vertical centers with YES button
-        let top = yesTop + (yesBtn.offsetHeight - noBtn.offsetHeight) / 2;
-        // clamp inside container
-        left = Math.max(6, Math.min(left, container.clientWidth - noBtn.offsetWidth - 6));
-        top = Math.max(6, Math.min(top, container.clientHeight - noBtn.offsetHeight - 6));
-        noBtn.style.left = left + 'px';
-        noBtn.style.top = top + 'px';
-    } catch (err) { /* ignore if elements not ready */ }
-}
-window.addEventListener('load', () => positionNoButton());
-
-// AUDIO: WebAudio simple effects
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-const audioCtx = AudioCtx ? new AudioCtx() : null;
-
-function playWhoosh() {
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, now);
-    osc.frequency.exponentialRampToValueAtTime(200, now + 0.25);
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start(now); osc.stop(now + 0.35);
-}
-
-function playCheer() {
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    const freqs = [440, 660, 880];
-    freqs.forEach((f, i) => {
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(f, now + i * 0.03);
-        g.gain.setValueAtTime(0.0001, now + i * 0.03);
-        g.gain.exponentialRampToValueAtTime(0.12, now + i * 0.03 + 0.02);
-        g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.03 + 0.5);
-        o.connect(g).connect(audioCtx.destination);
-        o.start(now + i * 0.03); o.stop(now + i * 0.03 + 0.6);
-    });
-}
-
-// Canvas confetti (lightweight)
-function canvasConfetti(count = 80, duration = 1800) {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const canvas = document.createElement('canvas');
-    canvas.style.position = 'fixed';
-    canvas.style.left = 0; canvas.style.top = 0; canvas.style.pointerEvents = 'none';
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight; canvas.style.zIndex = 2000;
-    document.body.appendChild(canvas);
-    const ctx = canvas.getContext('2d');
-    const particles = [];
-    const colors = ['#ff3366','#ff6699','#ffd1e6','#ffccf0','#ffb3c7'];
-    for (let i=0;i<count;i++) {
-        particles.push({
-            x: Math.random()*canvas.width,
-            y: Math.random()*canvas.height*0.25,
-            vx: (Math.random()-0.5)*8,
-            vy: Math.random()*5+2,
-            r: Math.random()*7+3,
-            color: colors[Math.floor(Math.random()*colors.length)],
-            rot: Math.random()*Math.PI*2,
-            vr: (Math.random()-0.5)*0.3
-        });
-    }
-    const start = performance.now();
-    function frame(now) {
-        const t = now - start;
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        for (let p of particles) {
-            p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vy += 0.06;
-            ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
-            ctx.fillStyle = p.color; ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*1.6);
-            ctx.restore();
-        }
-        if (t < duration) requestAnimationFrame(frame);
-        else { if (canvas.parentNode) canvas.parentNode.removeChild(canvas); }
-    }
-    requestAnimationFrame(frame);
-}
-
-// YES button click
-yesBtn.addEventListener("click", () => {
-    document.getElementById("loveMessage").style.display = "block";
-    hoverText.textContent = "";
-    noBtn.style.display = "none";
-    yesBtn.classList.add("glow");
-    
-    // Confetti burst (canvas)
-    canvasConfetti(60, 2000);
-    
-    // Haptic feedback - stronger for YES
-    if (navigator.vibrate) {
-        navigator.vibrate([100, 50, 100]);
-    }
-});
-
-
 </script>
 
 
